@@ -1,0 +1,518 @@
+{
+  "version": "1.0.0",
+  "source": {
+    "path": "input/data-model.md",
+    "sha256": "beb5d8c717cb8f5e43fbbbff33c2e8f2ce76b160098dbf31ca88de70c6a35abe"
+  },
+  "facts": [
+    {
+      "id": "urn:kb:v1:assertion:purpose%20and%20scope%3Athis%20document%20describes%20a%20**reference%20data%20model**%20for%20accounts%20payable%20(ap)%20automation%3A%20capturing%20supplier%20invoices%2C%20validating%20them%20against%20purchasing%20and%20receipt%20records%2C%20routing%20approvals%2C%20and%20recording%20payments%20and%20accounting%20outcomes.%20the%20workspace%20currently%20contains%20an%20architecture%20diagram%20that%20names%20a%20data%20model%2C%20semantic%20model%2C%20ontology%2C%20and%20knowledge%20graph%2C%20but%20no%20ap-specific%20implementation%20or%20schema.%20the%20entities%20below%20are%20therefore%20a%20proposed%20domain%20model%2C%20not%20a%20description%20of%20existing%20application%20tables.",
+      "kind": "source-assertion",
+      "name": "Purpose and scope",
+      "text": "This document describes a **reference data model** for accounts payable (AP) automation: capturing supplier invoices, validating them against purchasing and receipt records, routing approvals, and recording payments and accounting outcomes. The workspace currently contains an architecture diagram that names a data model, semantic model, ontology, and knowledge graph, but no AP-specific implementation or schema. The entities below are therefore a proposed domain model, not a description of existing application tables.",
+      "status": "explicit-source",
+      "source": {
+        "section": "Purpose and scope",
+        "line": 5,
+        "endLine": 5
+      }
+    },
+    {
+      "id": "urn:kb:v1:assertion:purpose%20and%20scope%3Athe%20model%20separates%20business%20records%20from%20files%2C%20extracted%20values%2C%20workflow%20history%2C%20and%20integration%20events.%20this%20supports%20traceability%20from%20an%20original%20invoice%20through%20review%20and%20payment.",
+      "kind": "source-assertion",
+      "name": "Purpose and scope",
+      "text": "The model separates business records from files, extracted values, workflow history, and integration events. This supports traceability from an original invoice through review and payment.",
+      "status": "explicit-source",
+      "source": {
+        "section": "Purpose and scope",
+        "line": 7,
+        "endLine": 7
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:organization",
+      "kind": "business-entity",
+      "name": "Organization",
+      "text": "Tenant or legal entity that owns AP records.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 13,
+        "endLine": 13
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:organization",
+      "kind": "attribute-candidates",
+      "name": "Organization",
+      "text": "`organization_id`, legal name, base currency, locale",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 13,
+        "endLine": 13
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:supplier",
+      "kind": "business-entity",
+      "name": "Supplier",
+      "text": "Supplier master record used to identify and pay an invoice issuer.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 14,
+        "endLine": 14
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:supplier",
+      "kind": "attribute-candidates",
+      "name": "Supplier",
+      "text": "`supplier_id`, organization, name, normalized tax identifiers, status, default payment terms",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 14,
+        "endLine": 14
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:supplierlocation",
+      "kind": "business-entity",
+      "name": "SupplierLocation",
+      "text": "Supplier remit-to, ordering, or tax location.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 15,
+        "endLine": 15
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:supplierlocation",
+      "kind": "attribute-candidates",
+      "name": "SupplierLocation",
+      "text": "`location_id`, `supplier_id`, address, remit-to details, currency",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 15,
+        "endLine": 15
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:invoice",
+      "kind": "business-entity",
+      "name": "Invoice",
+      "text": "AP document header and current business state.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 16,
+        "endLine": 16
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:invoice",
+      "kind": "attribute-candidates",
+      "name": "Invoice",
+      "text": "`invoice_id`, organization, supplier, invoice number, invoice date, due date, currency, subtotal, tax, shipping, total, status, source document",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 16,
+        "endLine": 16
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:invoiceline",
+      "kind": "business-entity",
+      "name": "InvoiceLine",
+      "text": "Goods or services billed on an invoice.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 17,
+        "endLine": 17
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:invoiceline",
+      "kind": "attribute-candidates",
+      "name": "InvoiceLine",
+      "text": "`line_id`, `invoice_id`, description, quantity, unit price, line amount, tax, purchase-order line reference, accounting dimensions",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 17,
+        "endLine": 17
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:document",
+      "kind": "business-entity",
+      "name": "Document",
+      "text": "Original file or supporting evidence, stored separately from business data.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 18,
+        "endLine": 18
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:document",
+      "kind": "attribute-candidates",
+      "name": "Document",
+      "text": "`document_id`, storage reference, file name, media type, checksum, upload time, source",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 18,
+        "endLine": 18
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:extractionrun",
+      "kind": "business-entity",
+      "name": "ExtractionRun",
+      "text": "Record of an OCR or AI extraction attempt.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 19,
+        "endLine": 19
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:extractionrun",
+      "kind": "attribute-candidates",
+      "name": "ExtractionRun",
+      "text": "`run_id`, `document_id`, model/version, started/completed time, outcome",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 19,
+        "endLine": 19
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:extractedfield",
+      "kind": "business-entity",
+      "name": "ExtractedField",
+      "text": "A captured value with provenance and review status.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 20,
+        "endLine": 20
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:extractedfield",
+      "kind": "attribute-candidates",
+      "name": "ExtractedField",
+      "text": "`field_id`, `run_id`, field name, raw and normalized values, page/location, confidence, reviewer decision",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 20,
+        "endLine": 20
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:purchaseorder",
+      "kind": "business-entity",
+      "name": "PurchaseOrder",
+      "text": "Authorized purchase commitment, where applicable.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 21,
+        "endLine": 21
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:purchaseorder",
+      "kind": "attribute-candidates",
+      "name": "PurchaseOrder",
+      "text": "`po_id`, organization, supplier, PO number, currency, status, total",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 21,
+        "endLine": 21
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:purchaseorderline",
+      "kind": "business-entity",
+      "name": "PurchaseOrderLine",
+      "text": "Item or service authorized on a PO.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 22,
+        "endLine": 22
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:purchaseorderline",
+      "kind": "attribute-candidates",
+      "name": "PurchaseOrderLine",
+      "text": "`po_line_id`, `po_id`, description, quantity, unit price, amount, accounting dimensions",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 22,
+        "endLine": 22
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:receipt",
+      "kind": "business-entity",
+      "name": "Receipt",
+      "text": "Evidence that ordered goods or services were received.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 23,
+        "endLine": 23
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:receipt",
+      "kind": "attribute-candidates",
+      "name": "Receipt",
+      "text": "`receipt_id`, `po_line_id`, received quantity or amount, received date, reference",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 23,
+        "endLine": 23
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:approval",
+      "kind": "business-entity",
+      "name": "Approval",
+      "text": "Approval policy result or decision for an invoice.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 24,
+        "endLine": 24
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:approval",
+      "kind": "attribute-candidates",
+      "name": "Approval",
+      "text": "`approval_id`, `invoice_id`, approver, step, decision, decision time, comments",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 24,
+        "endLine": 24
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:payment",
+      "kind": "business-entity",
+      "name": "Payment",
+      "text": "Payment instruction and its lifecycle.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 25,
+        "endLine": 25
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:payment",
+      "kind": "attribute-candidates",
+      "name": "Payment",
+      "text": "`payment_id`, organization, payment date, currency, amount, method, reference, status",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 25,
+        "endLine": 25
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:paymentallocation",
+      "kind": "business-entity",
+      "name": "PaymentAllocation",
+      "text": "Amount of a payment applied to an invoice.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 26,
+        "endLine": 26
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:paymentallocation",
+      "kind": "attribute-candidates",
+      "name": "PaymentAllocation",
+      "text": "`payment_id`, `invoice_id`, applied amount",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 26,
+        "endLine": 26
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:journalentry",
+      "kind": "business-entity",
+      "name": "JournalEntry",
+      "text": "Posted accounting result, often synchronized with a general ledger.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 27,
+        "endLine": 27
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:journalentry",
+      "kind": "attribute-candidates",
+      "name": "JournalEntry",
+      "text": "`entry_id`, invoice or payment reference, accounting period, external reference, posting status",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 27,
+        "endLine": 27
+      }
+    },
+    {
+      "id": "urn:kb:v1:business-entity:auditevent",
+      "kind": "business-entity",
+      "name": "AuditEvent",
+      "text": "Append-only record of important changes and actions.",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 28,
+        "endLine": 28
+      }
+    },
+    {
+      "id": "urn:kb:v1:attribute-candidates:auditevent",
+      "kind": "attribute-candidates",
+      "name": "AuditEvent",
+      "text": "`event_id`, entity type and ID, actor, action, timestamp, changed fields, correlation ID",
+      "status": "source-proposal",
+      "source": {
+        "section": "Core entities",
+        "line": 28,
+        "endLine": 28
+      }
+    },
+    {
+      "id": "urn:kb:v1:assertion:relationships%3A-%20an%20**organization**%20owns%20suppliers%2C%20invoices%2C%20purchase%20orders%2C%20approvals%2C%20payments%2C%20and%20accounting%20records.%20tenant-owned%20records%20should%20carry%20an%20organization%20identifier.%0A-%20a%20**supplier**%20can%20have%20multiple%20locations%20and%20invoices.%20an%20invoice%20belongs%20to%20one%20supplier%20and%20may%20reference%20a%20supplier%20location.%0A-%20an%20**invoice**%20has%20one%20or%20more%20invoice%20lines%20and%20may%20be%20supported%20by%20multiple%20documents.%20a%20document%20can%20have%20multiple%20extraction%20runs%3B%20each%20run%20can%20yield%20multiple%20extracted%20fields.%0A-%20an%20invoice%20line%20can%20optionally%20reference%20a%20purchase-order%20line.%20a%20po%20can%20have%20multiple%20lines%2C%20and%20a%20po%20line%20can%20have%20multiple%20receipts.%0A-%20an%20invoice%20can%20have%20multiple%20approval%20decisions%20and%20can%20be%20paid%20by%20one%20or%20more%20payments.%20a%20payment%20can%20cover%20multiple%20invoices%2C%20represented%20by%20payment%20allocations.%0A-%20an%20invoice%20or%20payment%20can%20be%20associated%20with%20one%20or%20more%20journal%20entries%2C%20depending%20on%20accounting%20and%20posting%20policy.%0A-%20audit%20events%20reference%20the%20affected%20business%20entity%20without%20replacing%20its%20current%20state.",
+      "kind": "source-assertion",
+      "name": "Relationships",
+      "text": "- An **Organization** owns suppliers, invoices, purchase orders, approvals, payments, and accounting records. Tenant-owned records should carry an organization identifier.\n- A **Supplier** can have multiple locations and invoices. An invoice belongs to one supplier and may reference a supplier location.\n- An **Invoice** has one or more invoice lines and may be supported by multiple documents. A document can have multiple extraction runs; each run can yield multiple extracted fields.\n- An invoice line can optionally reference a purchase-order line. A PO can have multiple lines, and a PO line can have multiple receipts.\n- An invoice can have multiple approval decisions and can be paid by one or more payments. A payment can cover multiple invoices, represented by payment allocations.\n- An invoice or payment can be associated with one or more journal entries, depending on accounting and posting policy.\n- Audit events reference the affected business entity without replacing its current state.",
+      "status": "explicit-source",
+      "source": {
+        "section": "Relationships",
+        "line": 32,
+        "endLine": 38
+      }
+    },
+    {
+      "id": "urn:kb:v1:assertion:invoice%20lifecycle%3Aa%20typical%20lifecycle%20is%3A",
+      "kind": "source-assertion",
+      "name": "Invoice lifecycle",
+      "text": "A typical lifecycle is:",
+      "status": "explicit-source",
+      "source": {
+        "section": "Invoice lifecycle",
+        "line": 42,
+        "endLine": 42
+      }
+    },
+    {
+      "id": "urn:kb:v1:assertion:invoice%20lifecycle%3A%60received%20%E2%86%92%20extracting%20%E2%86%92%20needs_review%20%E2%86%92%20validated%20%E2%86%92%20pending_approval%20%E2%86%92%20approved%20%E2%86%92%20scheduled_for_payment%20%E2%86%92%20partially_paid%20%2F%20paid%60",
+      "kind": "source-assertion",
+      "name": "Invoice lifecycle",
+      "text": "`received → extracting → needs_review → validated → pending_approval → approved → scheduled_for_payment → partially_paid / paid`",
+      "status": "explicit-source",
+      "source": {
+        "section": "Invoice lifecycle",
+        "line": 44,
+        "endLine": 44
+      }
+    },
+    {
+      "id": "urn:kb:v1:assertion:invoice%20lifecycle%3Aan%20invoice%20may%20instead%20move%20to%20%60rejected%60%2C%20%60on_hold%60%2C%20or%20%60void%60.%20exact%20states%20and%20transition%20rules%20depend%20on%20the%20organization's%20policy.%20record%20transitions%20and%20decisions%20in%20workflow%2Faudit%20history%3B%20do%20not%20rely%20only%20on%20a%20mutable%20status%20field%20to%20explain%20how%20a%20record%20reached%20its%20current%20state.",
+      "kind": "source-assertion",
+      "name": "Invoice lifecycle",
+      "text": "An invoice may instead move to `rejected`, `on_hold`, or `void`. Exact states and transition rules depend on the organization's policy. Record transitions and decisions in workflow/audit history; do not rely only on a mutable status field to explain how a record reached its current state.",
+      "status": "explicit-source",
+      "source": {
+        "section": "Invoice lifecycle",
+        "line": 46,
+        "endLine": 46
+      }
+    },
+    {
+      "id": "urn:kb:v1:assertion:validation%20and%20matching%3A1.%20**supplier%20identification%3A**%20match%20supplier%20details%20from%20the%20invoice%20to%20an%20active%20supplier%20record.%20preserve%20the%20observed%20value%20and%20the%20selected%20supplier%20link%20for%20review.%0A2.%20**duplicate%20detection%3A**%20check%20likely%20duplicates%20using%20organization%2C%20supplier%2C%20normalized%20invoice%20number%2C%20invoice%20date%2C%20currency%2C%20and%20amount.%20treat%20this%20as%20a%20review%20signal%20rather%20than%20assuming%20any%20one%20field%20is%20globally%20unique.%0A3.%20**arithmetic%20checks%3A**%20verify%20line%20extensions%20and%20compare%20the%20sum%20of%20lines%2C%20taxes%2C%20and%20charges%20with%20the%20invoice%20header%20total%2C%20allowing%20only%20configured%20rounding%20tolerances.%0A4.%20**po%20matching%3A**%20when%20a%20po%20exists%2C%20compare%20supplier%2C%20currency%2C%20quantities%2C%20prices%2C%20and%20amounts%20between%20invoice%20lines%20and%20po%20lines.%0A5.%20**receipt%20matching%3A**%20where%20receiving%20is%20required%2C%20compare%20invoiced%20quantities%20or%20amounts%20with%20recorded%20receipts.%20capture%20exceptions%20and%20tolerances%20explicitly.%0A6.%20**accounting%20and%20policy%20checks%3A**%20validate%20tax%20treatment%2C%20accounting%20dimensions%2C%20approval%20thresholds%2C%20and%20payment%20terms%20before%20approval%20or%20posting.",
+      "kind": "source-assertion",
+      "name": "Validation and matching",
+      "text": "1. **Supplier identification:** Match supplier details from the invoice to an active supplier record. Preserve the observed value and the selected supplier link for review.\n2. **Duplicate detection:** Check likely duplicates using organization, supplier, normalized invoice number, invoice date, currency, and amount. Treat this as a review signal rather than assuming any one field is globally unique.\n3. **Arithmetic checks:** Verify line extensions and compare the sum of lines, taxes, and charges with the invoice header total, allowing only configured rounding tolerances.\n4. **PO matching:** When a PO exists, compare supplier, currency, quantities, prices, and amounts between invoice lines and PO lines.\n5. **Receipt matching:** Where receiving is required, compare invoiced quantities or amounts with recorded receipts. Capture exceptions and tolerances explicitly.\n6. **Accounting and policy checks:** Validate tax treatment, accounting dimensions, approval thresholds, and payment terms before approval or posting.",
+      "status": "explicit-source",
+      "source": {
+        "section": "Validation and matching",
+        "line": 50,
+        "endLine": 55
+      }
+    },
+    {
+      "id": "urn:kb:v1:assertion:validation%20and%20matching%3Astore%20match%20outcomes%20and%20exceptions%20with%20the%20invoice%20or%20line%2C%20including%20the%20rule%2C%20compared%20values%2C%20tolerance%2C%20and%20result.%20this%20makes%20automated%20decisions%20explainable%20and%20reviewable.",
+      "kind": "source-assertion",
+      "name": "Validation and matching",
+      "text": "Store match outcomes and exceptions with the invoice or line, including the rule, compared values, tolerance, and result. This makes automated decisions explainable and reviewable.",
+      "status": "explicit-source",
+      "source": {
+        "section": "Validation and matching",
+        "line": 57,
+        "endLine": 57
+      }
+    },
+    {
+      "id": "urn:kb:v1:assertion:data%20integrity%20and%20operational%20guidance%3A-%20use%20stable%20internal%20ids%3B%20keep%20supplier%20invoice%20numbers%20and%20external%20po%2Fpayment%20references%20as%20business%20identifiers%2C%20not%20database%20primary%20keys.%0A-%20scope%20uniqueness%20and%20duplicate%20checks%20to%20the%20organization%20and%20supplier%20as%20appropriate.%20normalize%20identifiers%20for%20comparison%20while%20retaining%20the%20original%20document%20value.%0A-%20use%20decimal%20types%20for%20monetary%20amounts%20and%20an%20explicit%20iso%20currency%20code.%20never%20combine%20amounts%20in%20different%20currencies%20without%20recording%20the%20conversion%20rate%2C%20date%2C%20and%20source.%0A-%20keep%20extracted%20values%2C%20normalized%20values%2C%20confidence%2C%20source%20document%20location%2C%20and%20human%20corrections%20distinct.%20a%20corrected%20value%20should%20not%20erase%20the%20original%20extraction.%0A-%20preserve%20the%20original%20invoice%20file%20and%20its%20checksum.%20restrict%20access%20to%20documents%20and%20sensitive%20supplier%2C%20tax%2C%20bank%2C%20and%20payment%20data%20according%20to%20role%20and%20retention%20policy.%0A-%20record%20who%20or%20what%20changed%20business%20data%2C%20when%20it%20changed%2C%20and%20why.%20use%20idempotency%20or%20external%20references%20for%20integrations%20to%20avoid%20duplicate%20imports%2C%20postings%2C%20or%20payments.%0A-%20store%20payment%20credentials%20or%20bank%20account%20details%20only%20in%20an%20appropriately%20protected%20payment%2Fvendor%20system%3B%20reference%20them%20by%20a%20secure%20token%20where%20possible.",
+      "kind": "source-assertion",
+      "name": "Data integrity and operational guidance",
+      "text": "- Use stable internal IDs; keep supplier invoice numbers and external PO/payment references as business identifiers, not database primary keys.\n- Scope uniqueness and duplicate checks to the organization and supplier as appropriate. Normalize identifiers for comparison while retaining the original document value.\n- Use decimal types for monetary amounts and an explicit ISO currency code. Never combine amounts in different currencies without recording the conversion rate, date, and source.\n- Keep extracted values, normalized values, confidence, source document location, and human corrections distinct. A corrected value should not erase the original extraction.\n- Preserve the original invoice file and its checksum. Restrict access to documents and sensitive supplier, tax, bank, and payment data according to role and retention policy.\n- Record who or what changed business data, when it changed, and why. Use idempotency or external references for integrations to avoid duplicate imports, postings, or payments.\n- Store payment credentials or bank account details only in an appropriately protected payment/vendor system; reference them by a secure token where possible.",
+      "status": "explicit-source",
+      "source": {
+        "section": "Data integrity and operational guidance",
+        "line": 61,
+        "endLine": 67
+      }
+    },
+    {
+      "id": "urn:kb:v1:assertion:semantic%20model%20and%20ontology%20mapping%3Afor%20analytics%20or%20an%20ai-facing%20semantic%20layer%2C%20expose%20consistent%20business%20concepts%20such%20as%20**supplier**%2C%20**invoice**%2C%20**invoice%20line**%2C%20**purchase%20order**%2C%20**receipt**%2C%20**approval**%2C%20and%20**payment**%20with%20their%20relationships%20and%20canonical%20meanings.%20define%20measures%20such%20as%20invoice%20total%2C%20open%20balance%2C%20approval%20duration%2C%20and%20payment%20amount%20with%20explicit%20currency%20and%20status%20rules.%20preserve%20links%20back%20to%20source%20records%20and%20documents%20so%20that%20summaries%2C%20search%2C%20or%20knowledge-graph%20relationships%20can%20be%20grounded%20and%20audited.",
+      "kind": "source-assertion",
+      "name": "Semantic model and ontology mapping",
+      "text": "For analytics or an AI-facing semantic layer, expose consistent business concepts such as **Supplier**, **Invoice**, **Invoice Line**, **Purchase Order**, **Receipt**, **Approval**, and **Payment** with their relationships and canonical meanings. Define measures such as invoice total, open balance, approval duration, and payment amount with explicit currency and status rules. Preserve links back to source records and documents so that summaries, search, or knowledge-graph relationships can be grounded and audited.",
+      "status": "explicit-source",
+      "source": {
+        "section": "Semantic model and ontology mapping",
+        "line": 71,
+        "endLine": 71
+      }
+    }
+  ],
+  "physicalObjects": [],
+  "readiness": {
+    "physical": false,
+    "reason": "Source describes proposed business entities, not explicit physical tables, typed columns, nullability, and keys."
+  }
+}

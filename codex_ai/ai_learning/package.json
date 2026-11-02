@@ -1,0 +1,12 @@
+{
+  "name": "metadata-knowledge-base",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.18" },
+  "scripts": {
+    "build:metadata": "node src/normalize.ts",
+    "test": "node --test tests/*.test.ts",
+    "pipeline": "node src/pipeline.ts"
+  }
+}

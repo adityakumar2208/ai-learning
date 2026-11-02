@@ -1,0 +1,32 @@
+{
+  "name": "metadata-knowledge-base",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24.3" },
+  "scripts": {
+    "normalize": "node src/cli.ts normalize",
+    "validate": "node src/cli.ts validate",
+    "physical": "node src/cli.ts physical",
+    "semantic": "node src/cli.ts semantic",
+    "ontology": "node src/cli.ts ontology",
+    "phase0": "node src/cli.ts normalize",
+    "phase1": "node src/cli.ts physical",
+    "mcp": "node src/mcp/server.ts",
+    "build": "tsc --noEmit",
+    "test": "node --test test/*.test.ts"
+  },
+  "dependencies": {
+    "@comunica/query-sparql": "4.3.0",
+    "@modelcontextprotocol/sdk": "1.17.0",
+    "ajv": "8.17.1",
+    "n3": "1.26.0",
+    "rdf-validate-shacl": "0.5.3",
+    "yaml": "2.8.0",
+    "zod": "3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.0",
+    "typescript": "5.8.0"
+  }
+}

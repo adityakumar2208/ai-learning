@@ -1,0 +1,771 @@
+{
+  "version": "1",
+  "source": {
+    "file": "input/data-model.md",
+    "sha256": "beb5d8c717cb8f5e43fbbbff33c2e8f2ce76b160098dbf31ca88de70c6a35abe"
+  },
+  "sections": [
+    {
+      "title": "AP Automation Data Model",
+      "line": 1
+    },
+    {
+      "title": "Purpose and scope",
+      "line": 3
+    },
+    {
+      "title": "Core entities",
+      "line": 9
+    },
+    {
+      "title": "Relationships",
+      "line": 30
+    },
+    {
+      "title": "Invoice lifecycle",
+      "line": 40
+    },
+    {
+      "title": "Validation and matching",
+      "line": 48
+    },
+    {
+      "title": "Data integrity and operational guidance",
+      "line": 59
+    },
+    {
+      "title": "Semantic model and ontology mapping",
+      "line": 69
+    }
+  ],
+  "facts": [
+    {
+      "id": "fact:052f787e00bb5f72cd8f255b",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Purpose and scope",
+        "line": 5,
+        "text": "This document describes a **reference data model** for accounts payable (AP) automation: capturing supplier invoices, validating them against purchasing and receipt records, routing approvals, and recording payments and accounting outcomes. The workspace currently contains an architecture diagram that names a data model, semantic model, ontology, and knowledge graph, but no AP-specific implementation or schema. The entities below are therefore a proposed domain model, not a description of existing application tables."
+      }
+    },
+    {
+      "id": "fact:7f95529c28645f143bdb02b7",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Purpose and scope",
+        "line": 7,
+        "text": "The model separates business records from files, extracted values, workflow history, and integration events. This supports traceability from an original invoice through review and payment."
+      }
+    },
+    {
+      "id": "fact:21488f5cad34bef529511674",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 11,
+        "text": "| Entity | Purpose | Important attributes |"
+      }
+    },
+    {
+      "id": "fact:bc9abe10586fdf1441863c01",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 12,
+        "text": "|---|---|---|"
+      }
+    },
+    {
+      "id": "fact:9bfac0b66db09d1bf7abdcf1",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 13,
+        "text": "| **Organization** | Tenant or legal entity that owns AP records. | `organization_id`, legal name, base currency, locale |"
+      }
+    },
+    {
+      "id": "fact:484268df9aafef3a788011ae",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 14,
+        "text": "| **Supplier** | Supplier master record used to identify and pay an invoice issuer. | `supplier_id`, organization, name, normalized tax identifiers, status, default payment terms |"
+      }
+    },
+    {
+      "id": "fact:4e4bed8baca79f2c34a09adf",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 15,
+        "text": "| **SupplierLocation** | Supplier remit-to, ordering, or tax location. | `location_id`, `supplier_id`, address, remit-to details, currency |"
+      }
+    },
+    {
+      "id": "fact:01e7772c9c71619eabdb5020",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 16,
+        "text": "| **Invoice** | AP document header and current business state. | `invoice_id`, organization, supplier, invoice number, invoice date, due date, currency, subtotal, tax, shipping, total, status, source document |"
+      }
+    },
+    {
+      "id": "fact:32c92e4f0a1fca8d20202e00",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 17,
+        "text": "| **InvoiceLine** | Goods or services billed on an invoice. | `line_id`, `invoice_id`, description, quantity, unit price, line amount, tax, purchase-order line reference, accounting dimensions |"
+      }
+    },
+    {
+      "id": "fact:3bd33691f1f382b659a00314",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 18,
+        "text": "| **Document** | Original file or supporting evidence, stored separately from business data. | `document_id`, storage reference, file name, media type, checksum, upload time, source |"
+      }
+    },
+    {
+      "id": "fact:c168edef733107b1ac9887e0",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 19,
+        "text": "| **ExtractionRun** | Record of an OCR or AI extraction attempt. | `run_id`, `document_id`, model/version, started/completed time, outcome |"
+      }
+    },
+    {
+      "id": "fact:0113c53e8e5ed9b584c681a8",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 20,
+        "text": "| **ExtractedField** | A captured value with provenance and review status. | `field_id`, `run_id`, field name, raw and normalized values, page/location, confidence, reviewer decision |"
+      }
+    },
+    {
+      "id": "fact:a73d6cbc66fb08e346d83454",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 21,
+        "text": "| **PurchaseOrder** | Authorized purchase commitment, where applicable. | `po_id`, organization, supplier, PO number, currency, status, total |"
+      }
+    },
+    {
+      "id": "fact:135d8840b60f17e91e850936",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 22,
+        "text": "| **PurchaseOrderLine** | Item or service authorized on a PO. | `po_line_id`, `po_id`, description, quantity, unit price, amount, accounting dimensions |"
+      }
+    },
+    {
+      "id": "fact:00b992ecc500131286994695",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 23,
+        "text": "| **Receipt** | Evidence that ordered goods or services were received. | `receipt_id`, `po_line_id`, received quantity or amount, received date, reference |"
+      }
+    },
+    {
+      "id": "fact:97299513edee5e9f790b1d40",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 24,
+        "text": "| **Approval** | Approval policy result or decision for an invoice. | `approval_id`, `invoice_id`, approver, step, decision, decision time, comments |"
+      }
+    },
+    {
+      "id": "fact:11848edc7c9eed60cb295137",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 25,
+        "text": "| **Payment** | Payment instruction and its lifecycle. | `payment_id`, organization, payment date, currency, amount, method, reference, status |"
+      }
+    },
+    {
+      "id": "fact:a3583b7135b6ab41395a15db",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 26,
+        "text": "| **PaymentAllocation** | Amount of a payment applied to an invoice. | `payment_id`, `invoice_id`, applied amount |"
+      }
+    },
+    {
+      "id": "fact:6496df68d6ae1fa43816dcf6",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 27,
+        "text": "| **JournalEntry** | Posted accounting result, often synchronized with a general ledger. | `entry_id`, invoice or payment reference, accounting period, external reference, posting status |"
+      }
+    },
+    {
+      "id": "fact:9e2b5ad7f7d46e92435d9c44",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Core entities",
+        "line": 28,
+        "text": "| **AuditEvent** | Append-only record of important changes and actions. | `event_id`, entity type and ID, actor, action, timestamp, changed fields, correlation ID |"
+      }
+    },
+    {
+      "id": "fact:bc4e6136bea8885473ac7230",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Relationships",
+        "line": 32,
+        "text": "- An **Organization** owns suppliers, invoices, purchase orders, approvals, payments, and accounting records. Tenant-owned records should carry an organization identifier."
+      }
+    },
+    {
+      "id": "fact:908afcba4120d9388736de08",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Relationships",
+        "line": 33,
+        "text": "- A **Supplier** can have multiple locations and invoices. An invoice belongs to one supplier and may reference a supplier location."
+      }
+    },
+    {
+      "id": "fact:d9876c5d2bb5f8b985984c38",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Relationships",
+        "line": 34,
+        "text": "- An **Invoice** has one or more invoice lines and may be supported by multiple documents. A document can have multiple extraction runs; each run can yield multiple extracted fields."
+      }
+    },
+    {
+      "id": "fact:efa3565ccb1d44ed08d5760d",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Relationships",
+        "line": 35,
+        "text": "- An invoice line can optionally reference a purchase-order line. A PO can have multiple lines, and a PO line can have multiple receipts."
+      }
+    },
+    {
+      "id": "fact:398fdc0f36753333580feefc",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Relationships",
+        "line": 36,
+        "text": "- An invoice can have multiple approval decisions and can be paid by one or more payments. A payment can cover multiple invoices, represented by payment allocations."
+      }
+    },
+    {
+      "id": "fact:27b2c87764e5f07833d55662",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Relationships",
+        "line": 37,
+        "text": "- An invoice or payment can be associated with one or more journal entries, depending on accounting and posting policy."
+      }
+    },
+    {
+      "id": "fact:bc0b1659260639d6c8ce2738",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Relationships",
+        "line": 38,
+        "text": "- Audit events reference the affected business entity without replacing its current state."
+      }
+    },
+    {
+      "id": "fact:17bcd9930074b4378e1229a5",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Invoice lifecycle",
+        "line": 42,
+        "text": "A typical lifecycle is:"
+      }
+    },
+    {
+      "id": "fact:ba764eb6a3c024d31cf6de8f",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Invoice lifecycle",
+        "line": 44,
+        "text": "`received → extracting → needs_review → validated → pending_approval → approved → scheduled_for_payment → partially_paid / paid`"
+      }
+    },
+    {
+      "id": "fact:1f369f5943d3f34c4799edca",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Invoice lifecycle",
+        "line": 46,
+        "text": "An invoice may instead move to `rejected`, `on_hold`, or `void`. Exact states and transition rules depend on the organization's policy. Record transitions and decisions in workflow/audit history; do not rely only on a mutable status field to explain how a record reached its current state."
+      }
+    },
+    {
+      "id": "fact:be940b4c6be070ac80bcaeec",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Validation and matching",
+        "line": 50,
+        "text": "1. **Supplier identification:** Match supplier details from the invoice to an active supplier record. Preserve the observed value and the selected supplier link for review."
+      }
+    },
+    {
+      "id": "fact:53fc18528e462f6221dadfa8",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Validation and matching",
+        "line": 51,
+        "text": "2. **Duplicate detection:** Check likely duplicates using organization, supplier, normalized invoice number, invoice date, currency, and amount. Treat this as a review signal rather than assuming any one field is globally unique."
+      }
+    },
+    {
+      "id": "fact:5035cf248ff3208b836205a5",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Validation and matching",
+        "line": 52,
+        "text": "3. **Arithmetic checks:** Verify line extensions and compare the sum of lines, taxes, and charges with the invoice header total, allowing only configured rounding tolerances."
+      }
+    },
+    {
+      "id": "fact:b73dfb09da8d85dad9b7792a",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Validation and matching",
+        "line": 53,
+        "text": "4. **PO matching:** When a PO exists, compare supplier, currency, quantities, prices, and amounts between invoice lines and PO lines."
+      }
+    },
+    {
+      "id": "fact:83e2186b90d2adc1aff1c5bd",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Validation and matching",
+        "line": 54,
+        "text": "5. **Receipt matching:** Where receiving is required, compare invoiced quantities or amounts with recorded receipts. Capture exceptions and tolerances explicitly."
+      }
+    },
+    {
+      "id": "fact:95f6919fefb80621a4bc0f41",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Validation and matching",
+        "line": 55,
+        "text": "6. **Accounting and policy checks:** Validate tax treatment, accounting dimensions, approval thresholds, and payment terms before approval or posting."
+      }
+    },
+    {
+      "id": "fact:77a4dc9d18ea5f07deedd199",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Validation and matching",
+        "line": 57,
+        "text": "Store match outcomes and exceptions with the invoice or line, including the rule, compared values, tolerance, and result. This makes automated decisions explainable and reviewable."
+      }
+    },
+    {
+      "id": "fact:e00afade0b13fa2f6564ba37",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Data integrity and operational guidance",
+        "line": 61,
+        "text": "- Use stable internal IDs; keep supplier invoice numbers and external PO/payment references as business identifiers, not database primary keys."
+      }
+    },
+    {
+      "id": "fact:b08ef80b80e0cd468412b785",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Data integrity and operational guidance",
+        "line": 62,
+        "text": "- Scope uniqueness and duplicate checks to the organization and supplier as appropriate. Normalize identifiers for comparison while retaining the original document value."
+      }
+    },
+    {
+      "id": "fact:36fc9b656cb7503c1adddab6",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Data integrity and operational guidance",
+        "line": 63,
+        "text": "- Use decimal types for monetary amounts and an explicit ISO currency code. Never combine amounts in different currencies without recording the conversion rate, date, and source."
+      }
+    },
+    {
+      "id": "fact:72a23b6ea907c9cbae62303b",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Data integrity and operational guidance",
+        "line": 64,
+        "text": "- Keep extracted values, normalized values, confidence, source document location, and human corrections distinct. A corrected value should not erase the original extraction."
+      }
+    },
+    {
+      "id": "fact:de77d7018959836cdc6d82f3",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Data integrity and operational guidance",
+        "line": 65,
+        "text": "- Preserve the original invoice file and its checksum. Restrict access to documents and sensitive supplier, tax, bank, and payment data according to role and retention policy."
+      }
+    },
+    {
+      "id": "fact:519a1f7231265f03bab52113",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Data integrity and operational guidance",
+        "line": 66,
+        "text": "- Record who or what changed business data, when it changed, and why. Use idempotency or external references for integrations to avoid duplicate imports, postings, or payments."
+      }
+    },
+    {
+      "id": "fact:c0cbfacb417807e40f774f52",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Data integrity and operational guidance",
+        "line": 67,
+        "text": "- Store payment credentials or bank account details only in an appropriately protected payment/vendor system; reference them by a secure token where possible."
+      }
+    },
+    {
+      "id": "fact:fc28b18663db95fd53af7c0e",
+      "status": "explicit",
+      "source": {
+        "file": "input/data-model.md",
+        "section": "Semantic model and ontology mapping",
+        "line": 71,
+        "text": "For analytics or an AI-facing semantic layer, expose consistent business concepts such as **Supplier**, **Invoice**, **Invoice Line**, **Purchase Order**, **Receipt**, **Approval**, and **Payment** with their relationships and canonical meanings. Define measures such as invoice total, open balance, approval duration, and payment amount with explicit currency and status rules. Preserve links back to source records and documents so that summaries, search, or knowledge-graph relationships can be grounded and audited."
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "business:organization",
+      "name": "Organization",
+      "description": "Tenant or legal entity that owns AP records.",
+      "attributeCandidates": [
+        "`organization_id`",
+        "legal name",
+        "base currency",
+        "locale"
+      ],
+      "sourceFactId": "fact:9bfac0b66db09d1bf7abdcf1",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:supplier",
+      "name": "Supplier",
+      "description": "Supplier master record used to identify and pay an invoice issuer.",
+      "attributeCandidates": [
+        "`supplier_id`",
+        "organization",
+        "name",
+        "normalized tax identifiers",
+        "status",
+        "default payment terms"
+      ],
+      "sourceFactId": "fact:484268df9aafef3a788011ae",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:supplierlocation",
+      "name": "SupplierLocation",
+      "description": "Supplier remit-to, ordering, or tax location.",
+      "attributeCandidates": [
+        "`location_id`",
+        "`supplier_id`",
+        "address",
+        "remit-to details",
+        "currency"
+      ],
+      "sourceFactId": "fact:4e4bed8baca79f2c34a09adf",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:invoice",
+      "name": "Invoice",
+      "description": "AP document header and current business state.",
+      "attributeCandidates": [
+        "`invoice_id`",
+        "organization",
+        "supplier",
+        "invoice number",
+        "invoice date",
+        "due date",
+        "currency",
+        "subtotal",
+        "tax",
+        "shipping",
+        "total",
+        "status",
+        "source document"
+      ],
+      "sourceFactId": "fact:01e7772c9c71619eabdb5020",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:invoiceline",
+      "name": "InvoiceLine",
+      "description": "Goods or services billed on an invoice.",
+      "attributeCandidates": [
+        "`line_id`",
+        "`invoice_id`",
+        "description",
+        "quantity",
+        "unit price",
+        "line amount",
+        "tax",
+        "purchase-order line reference",
+        "accounting dimensions"
+      ],
+      "sourceFactId": "fact:32c92e4f0a1fca8d20202e00",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:document",
+      "name": "Document",
+      "description": "Original file or supporting evidence, stored separately from business data.",
+      "attributeCandidates": [
+        "`document_id`",
+        "storage reference",
+        "file name",
+        "media type",
+        "checksum",
+        "upload time",
+        "source"
+      ],
+      "sourceFactId": "fact:3bd33691f1f382b659a00314",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:extractionrun",
+      "name": "ExtractionRun",
+      "description": "Record of an OCR or AI extraction attempt.",
+      "attributeCandidates": [
+        "`run_id`",
+        "`document_id`",
+        "model/version",
+        "started/completed time",
+        "outcome"
+      ],
+      "sourceFactId": "fact:c168edef733107b1ac9887e0",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:extractedfield",
+      "name": "ExtractedField",
+      "description": "A captured value with provenance and review status.",
+      "attributeCandidates": [
+        "`field_id`",
+        "`run_id`",
+        "field name",
+        "raw and normalized values",
+        "page/location",
+        "confidence",
+        "reviewer decision"
+      ],
+      "sourceFactId": "fact:0113c53e8e5ed9b584c681a8",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:purchaseorder",
+      "name": "PurchaseOrder",
+      "description": "Authorized purchase commitment, where applicable.",
+      "attributeCandidates": [
+        "`po_id`",
+        "organization",
+        "supplier",
+        "PO number",
+        "currency",
+        "status",
+        "total"
+      ],
+      "sourceFactId": "fact:a73d6cbc66fb08e346d83454",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:purchaseorderline",
+      "name": "PurchaseOrderLine",
+      "description": "Item or service authorized on a PO.",
+      "attributeCandidates": [
+        "`po_line_id`",
+        "`po_id`",
+        "description",
+        "quantity",
+        "unit price",
+        "amount",
+        "accounting dimensions"
+      ],
+      "sourceFactId": "fact:135d8840b60f17e91e850936",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:receipt",
+      "name": "Receipt",
+      "description": "Evidence that ordered goods or services were received.",
+      "attributeCandidates": [
+        "`receipt_id`",
+        "`po_line_id`",
+        "received quantity or amount",
+        "received date",
+        "reference"
+      ],
+      "sourceFactId": "fact:00b992ecc500131286994695",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:approval",
+      "name": "Approval",
+      "description": "Approval policy result or decision for an invoice.",
+      "attributeCandidates": [
+        "`approval_id`",
+        "`invoice_id`",
+        "approver",
+        "step",
+        "decision",
+        "decision time",
+        "comments"
+      ],
+      "sourceFactId": "fact:97299513edee5e9f790b1d40",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:payment",
+      "name": "Payment",
+      "description": "Payment instruction and its lifecycle.",
+      "attributeCandidates": [
+        "`payment_id`",
+        "organization",
+        "payment date",
+        "currency",
+        "amount",
+        "method",
+        "reference",
+        "status"
+      ],
+      "sourceFactId": "fact:11848edc7c9eed60cb295137",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:paymentallocation",
+      "name": "PaymentAllocation",
+      "description": "Amount of a payment applied to an invoice.",
+      "attributeCandidates": [
+        "`payment_id`",
+        "`invoice_id`",
+        "applied amount"
+      ],
+      "sourceFactId": "fact:a3583b7135b6ab41395a15db",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:journalentry",
+      "name": "JournalEntry",
+      "description": "Posted accounting result, often synchronized with a general ledger.",
+      "attributeCandidates": [
+        "`entry_id`",
+        "invoice or payment reference",
+        "accounting period",
+        "external reference",
+        "posting status"
+      ],
+      "sourceFactId": "fact:6496df68d6ae1fa43816dcf6",
+      "status": "proposed-in-source"
+    },
+    {
+      "id": "business:auditevent",
+      "name": "AuditEvent",
+      "description": "Append-only record of important changes and actions.",
+      "attributeCandidates": [
+        "`event_id`",
+        "entity type and ID",
+        "actor",
+        "action",
+        "timestamp",
+        "changed fields",
+        "correlation ID"
+      ],
+      "sourceFactId": "fact:9e2b5ad7f7d46e92435d9c44",
+      "status": "proposed-in-source"
+    }
+  ],
+  "physicalTables": [],
+  "physicalReady": false,
+  "ambiguities": [
+    "Organization: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:9bfac0b66db09d1bf7abdcf1).",
+    "Supplier: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:484268df9aafef3a788011ae).",
+    "SupplierLocation: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:4e4bed8baca79f2c34a09adf).",
+    "Invoice: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:01e7772c9c71619eabdb5020).",
+    "InvoiceLine: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:32c92e4f0a1fca8d20202e00).",
+    "Document: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:3bd33691f1f382b659a00314).",
+    "ExtractionRun: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:c168edef733107b1ac9887e0).",
+    "ExtractedField: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:0113c53e8e5ed9b584c681a8).",
+    "PurchaseOrder: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:a73d6cbc66fb08e346d83454).",
+    "PurchaseOrderLine: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:135d8840b60f17e91e850936).",
+    "Receipt: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:00b992ecc500131286994695).",
+    "Approval: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:97299513edee5e9f790b1d40).",
+    "Payment: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:11848edc7c9eed60cb295137).",
+    "PaymentAllocation: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:a3583b7135b6ab41395a15db).",
+    "JournalEntry: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:6496df68d6ae1fa43816dcf6).",
+    "AuditEvent: physical table/column names, complete column definitions, types, nullability, primary keys, foreign keys and constraint details require explicit specification (source fact:9e2b5ad7f7d46e92435d9c44).",
+    "Narrative attributes are candidate business attributes, not approved physical columns. Commas and slash-separated terms require review.",
+    "Relationships are preserved verbatim; foreign-key placement, optionality and complete cardinalities are not fully specified.",
+    "Lifecycle states are illustrative and policy-dependent; do not generate a closed enumeration or transition constraints.",
+    "Invoice total, open balance, approval duration and payment amount lack complete approved currency, status, grain and aggregation rules.",
+    "Ownership and sensitivity guidance lacks an exhaustive per-object classification or enforceable access policy.",
+    "No ontology namespace owner, versioning policy, approved synonyms, class hierarchy or representative instance dataset is specified.",
+    "Execution strategy names Phases 5 and 6, but only Phases 0–4 are defined. MCP transport, authentication and deployment requirements are unspecified."
+  ]
+}
